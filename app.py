@@ -6,9 +6,13 @@ import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash
 from dash import html
+import plotly.io as pol
 
 from rename import rename_columns, re_columns_names
 from sum_category import sum_category
+
+
+pol.renderers.default = 'browser'
 app = dash.Dash(__name__)
 
 df = pd.read_csv('./data.csv')
@@ -46,15 +50,34 @@ bar_interesting.update_layout(
     xaxis={'categoryorder': 'total descending'},
 )
 
-app.layout = html.Div([
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(
-                figure=bar_interesting
-            )
-        ], width=4)
+tab1_content = [
+    html.Div([
+        dbc.Row([
+            dbc.Col([
+                dcc.Graph(
+                    figure=bar_interesting
+                )
+            ], width=4),
+            dbc.Col([
+                html.Div('Hello')
+            ], width=4)
+        ])
     ])
+]
+
+tab2_content = [
+    html.Div('Hello')
+]
+
+app.layout = html.Div([
+  html.H1(children="Риски по ССЗ Омск"),
+
+  dbc.Tabs([
+    dbc.Tab(tab1_content, label="Статистика"),
+    dbc.Tab(tab2_content, label="Пациенты в МО"),
+  ])
 ])
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
